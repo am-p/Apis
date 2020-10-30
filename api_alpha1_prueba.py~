@@ -1,0 +1,15 @@
+
+def MACD(symbol, interval, series_type='close', fastperiod=12, slowperiod=26, signalperiod=9):
+    function='MACD'
+    url='https://www.alphavantage.co/query'
+    parametros = {'function':function, 'symbol':symbol, 'interval':interval, 
+                  'series_type':series_type, 'fastperiod': fastperiod, 
+                  'slowperiod':slowperiod, 'signalperiod':signalperiod,
+                  'apikey':apikey }
+    r=requests.get(url, params=parametros)
+    js=r.json()
+    df=pd.DataFrame.from_dict(js,orient="index")
+    return df
+
+macd=MACD("GGAL","daily")
+print(macd)
