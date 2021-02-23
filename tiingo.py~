@@ -1,0 +1,8 @@
+import pandas as pd
+from tiingo import TiingoClient
+
+config={}
+
+config["session"]= True
+config["api_key"]= "00244882b421a2c0005d55ebb15e84dc2c03bb71"
+client=TiingoClient(config)

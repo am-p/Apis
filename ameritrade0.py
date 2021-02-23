@@ -1,0 +1,46 @@
+import requests
+import pandas as pd
+
+c_key="RFJI9HV4AXUG3KSZ2TNIQKSAYGH5HIRZ"
+
+def getQuote(symbol):
+    
+    endpoint='https://api.tdameritrade.com/v1/marketdata/'+symbol+'/quotes?'
+    p={'apikey':c_key}
+    r=requests.get(url=endpoint, params=p)
+    return r.json()[symbol]
+
+def getQuotes(symbols):
+    
+    endpoint="https://api.tdameritrade.com/v1/marketdata/quotes"
+    p={"apikey":c_key,"symbol":symbols}
+    r=requests.get(url=endpoint,params=p)
+    return r.json()
+
+def getHist(symbol, periodT='day', period=1, freqT='minute', freq=1, na='true'):
+    
+    
+    params={'symbol':symbol, 'periodType':periodT, 'period':period, 
+              'apikey' : c_key, 'frequencyType':freqT, 'frequency':freq ,
+              'needExtendedHoursData':na}
+    
+    url_base='https://api.tdameritrade.com/v1/marketdata/'
+    endpoint=url_base + symbol+'/pricehistory'
+    
+    r=requests.get(url=endpoint, params=params)
+    try:
+        js=r.json()['candles']
+        df=pd.DataFrame(js)
+        df['fecha']=pd.to_datetime(df.datetime - 3600*1000*3, unit='ms')
+    except:
+        print('Error, ojo que tenemos una respuesta inesperada', r.json())
+        df=pd.DataFrame()
+        
+    return df
+
+#quote=getQuote('SPY')
+#quotes=getQuotes("QQQ,AAPL")
+data = getHist('GGAL', periodT='day', period=1, freqT='minute', freq=1, na='false')
+#print(quote)
+#print(quotes)
+print(data)
